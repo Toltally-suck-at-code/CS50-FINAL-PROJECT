@@ -1,0 +1,331 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standby Mode App</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #4a90e2;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-weight: 500;
+            padding-top: 50px;
+        }
+        #clock-date {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background-color: var(--shadow-color);
+            border-radius: 15px;
+            box-shadow: 0 0 20px var(--shadow-color);
+        }
+        #clock {
+            font-size: 72px;
+            font-weight: bold;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+        #clock-main {
+            font-size: 120px;
+        }
+        #clock-seconds {
+            font-size: 48px;
+            margin-left: 10px;
+        }
+        #date {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 40px;
+        }
+        .section {
+            width: 45%;
+            padding: 20px;
+        }
+        #weatherResult {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        input, select, button {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 16px;
+        }
+        input[type="text"], select {
+            width: calc(100% - 30px);
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        button {
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #3a7ac5;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        #colorCustomization {
+            margin-top: 40px;
+            text-align: center;
+        }
+        #colorCustomization input {
+            margin: 0 10px;
+            padding: 5px;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+        }
+        a.button {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        a.button:hover {
+            background-color: #3a7ac5;
+        }
+        a.button:active {
+            transform: scale(0.98);
+        }
+        #timer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #timerDisplay {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+        #timerControls button {
+            margin: 0 5px;
+        }
+        #alarmSound {
+            margin-top: 20px;
+        }
+        #customAlarmUpload {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="clock-date">
+    <div id="clock">
+        <span id="clock-main"></span>
+        <span id="clock-seconds"></span>
+    </div>
+    <div id="date"></div>
+</div>
+
+<div id="container">
+    <div class="section" id="weather">
+        <h2>Weather</h2>
+        <form id="weatherForm">
+            <input type="text" id="city" placeholder="Enter city" required>
+            <button type="submit">Get Weather</button>
+        </form>
+        <div id="weatherResult"></div>
+    </div>
+
+    <div class="section" id="study">
+        <h2>Rate Your Study Performance</h2>
+        <form action="/submit_rating" method="POST">
+            <input type="text" name="subject" placeholder="Subject" required>
+            <select name="rating" required>
+                <option value="">Select Rating</option>
+                <option value="1">1 Star</option>
+                <option value="2">2 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="5">5 Stars</option>
+            </select>
+            <button type="submit">Submit Rating</button>
+        </form>
+        <a href="{{ url_for('past_performances') }}" class="button">View Past Performances</a>
+    </div>
+</div>
+
+<div id="timer" class="section">
+    <h2>Timer</h2>
+    <div id="timerDisplay">00:00:00</div>
+    <div id="timerControls">
+        <input type="number" id="timerInput" min="1" max="999" placeholder="Enter minutes">
+        <button id="startTimer">Start</button>
+        <button id="pauseTimer">Pause</button>
+        <button id="resetTimer">Reset</button>
+    </div>
+    <div id="alarmSound">
+        <h3>Alarm Sound</h3>
+        <select id="alarmSelect">
+            <option value="default">Default Alarm</option>
+            <option value="custom">Custom Alarm</option>
+        </select>
+        <input type="file" id="customAlarmUpload" accept="audio/mpeg">
+    </div>
+</div>
+
+<div id="colorCustomization">
+    <h3>Customize Colors</h3>
+    <label for="bgColor">Background:</label>
+    <input type="color" id="bgColor" value="#000000">
+    <label for="textColor">Text:</label>
+    <input type="color" id="textColor" value="#ffffff">
+    <label for="accentColor">Accent:</label>
+    <input type="color" id="accentColor" value="#4a90e2">
+</div>
+
+<audio id="alarmAudio" src="/api/placeholder/audio/alarm.mp3"></audio>
+
+<script>
+    function updateClockAndDate() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock-main').textContent = `${hours}:${minutes}`;
+        document.getElementById('clock-seconds').textContent = seconds;
+
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+    }
+
+    // Update clock and date every second
+    setInterval(updateClockAndDate, 1000);
+    updateClockAndDate(); // Initial call to display time and date immediately
+
+    document.getElementById('weatherForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const city = document.getElementById('city').value;
+        const response = await fetch('/weather', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ city })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById('weatherResult').innerText = `Temperature: ${data.temperature}°C, Weather: ${data.description}`;
+        } else {
+            document.getElementById('weatherResult').innerText = 'Error: ' + data.error;
+        }
+    };
+
+    // Color customization
+    function updateColors() {
+        document.documentElement.style.setProperty('--bg-color', document.getElementById('bgColor').value);
+        document.documentElement.style.setProperty('--text-color', document.getElementById('textColor').value);
+        document.documentElement.style.setProperty('--accent-color', document.getElementById('accentColor').value);
+        
+        // Update shadow color based on text color
+        const textColor = document.getElementById('textColor').value;
+        const shadowColor = `${textColor}1A`; // 1A is 10% opacity in hex
+        document.documentElement.style.setProperty('--shadow-color', shadowColor);
+    }
+
+    document.getElementById('bgColor').addEventListener('input', updateColors);
+    document.getElementById('textColor').addEventListener('input', updateColors);
+    document.getElementById('accentColor').addEventListener('input', updateColors);
+
+    // Timer functionality
+    let timerInterval;
+    let remainingTime = 0;
+    const alarmAudio = document.getElementById('alarmAudio');
+
+    function updateTimerDisplay(timeInSeconds) {
+        const hours = Math.floor(timeInSeconds / 3600);
+        const minutes = Math.floor((timeInSeconds % 3600) / 60);
+        const seconds = timeInSeconds % 60;
+        document.getElementById('timerDisplay').textContent = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function playAlarm() {
+        alarmAudio.play();
+    }
+
+    document.getElementById('startTimer').addEventListener('click', () => {
+        clearInterval(timerInterval);
+        const inputMinutes = parseInt(document.getElementById('timerInput').value, 10) || 0;
+        remainingTime = inputMinutes * 60;
+        updateTimerDisplay(remainingTime);
+        
+        timerInterval = setInterval(() => {
+            if (remainingTime > 0) {
+                remainingTime--;
+                updateTimerDisplay(remainingTime);
+            } else {
+                clearInterval(timerInterval);
+                playAlarm();
+                alert('Timer finished!');
+            }
+        }, 1000);
+    });
+
+    document.getElementById('pauseTimer').addEventListener('click', () => {
+        clearInterval(timerInterval);
+    });
+
+    document.getElementById('resetTimer').addEventListener('click', () => {
+        clearInterval(timerInterval);
+        remainingTime = 0;
+        updateTimerDisplay(remainingTime);
+        document.getElementById('timerInput').value = '';
+        alarmAudio.pause();
+        alarmAudio.currentTime = 0;
+    });
+
+    // Alarm sound selection
+    document.getElementById('alarmSelect').addEventListener('change', (e) => {
+        if (e.target.value === 'custom') {
+            document.getElementById('customAlarmUpload').style.display = 'inline-block';
+        } else {
+            document.getElementById('customAlarmUpload').style.display = 'none';
+            alarmAudio.src = "/api/placeholder/audio/alarm.mp3";
+        }
+    });
+
+    document.getElementById('customAlarmUpload').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                alarmAudio.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
+</body>
+</html>

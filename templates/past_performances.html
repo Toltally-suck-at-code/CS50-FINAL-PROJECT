@@ -1,0 +1,196 @@
+<!-- past_performances.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Study Performances</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --table-background: white;
+            --table-stripe: #f2f2f2;
+            --table-hover: #ddd;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme {
+            --background-color: #1a1a1a;
+            --text-color: #f4f4f4;
+            --table-background: #2c2c2c;
+            --table-stripe: #3c3c3c;
+            --table-hover: #4c4c4c;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .average-rating {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: var(--table-background);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--primary-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--table-stripe);
+        }
+
+        tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.9;
+        }
+
+        .theme-controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        #color-picker {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-controls">
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+        <input type="color" id="color-picker" value="#3498db">
+    </div>
+
+    <h1>Past Study Performances</h1>
+    <div class="average-rating">
+        <p>Average Rating: {{ average_rating }} out of 5</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for performance in performances %}
+            <tr>
+                <td>{{ performance.subject }}</td>
+                <td>{{ performance.rating }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const colorPicker = document.getElementById('color-picker');
+
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-theme');
+        });
+
+        colorPicker.addEventListener('input', function() {
+            document.documentElement.style.setProperty('--primary-color', this.value);
+        });
+    </script>
+</body>
+</html>
