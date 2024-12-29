@@ -133,7 +133,7 @@ We have used CSS variables and JavaScript for theme switching, we wanted to demo
 7. **Customization Options**: We gave the User the ability to change themes and customize the website, this allows us to enhance the user experience and accessibility.
 8. **Modular Design**: We separated functions and sections of code between routes and templates, this allows for a easier maintenance, debugging code and scalability
 
-Overall, our application goal is to provide an example of a full-stack web application, integrating frontend technologies with a Python backend, database management, and external API integration. The design choices we made facilitate maintainability, scalability, and debugging and a good user experience.
+Our application goal is to provide an example of a full-stack web application, integrating frontend technologies with a Python backend, database management, and external API integration. The design choices we made facilitate maintainability, scalability, and debugging and a good user experience.
 
 ## Design Decisions
 
